@@ -3,12 +3,12 @@ from pygame.locals import *
 pygame.init()
 
 class Game:
-  def __init__(self,screen,clock,game_font):
+  def __init__(self,screen,clock,game_font=None):
     self.screen = screen
     self.clock = clock
     self.font = game_font
     
-  def flip(self,fps):
+  def flip(self,fps=0):
     pygame.display.flip()
     self.clock.tick(fps)
 
@@ -21,6 +21,7 @@ class Game:
         pygame.quit()
         sys.exit()
 
+  # Credtis to Clear Code
   def deltatime(self,previous_time):
     self.dt = time.time() - previous_time
     previous_time = time.time()
@@ -34,6 +35,7 @@ class Game:
     pygame.draw.rect(display_surf,'Black',debug_rect)
     display_surf.blit(debug_surf,debug_rect)
 
+  # Credits to Thefluffypotato
   def Font(self,path,information,location,surface):
     # ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z','a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','.','-',',',':','+','\'','!','?','0','1','2','3','4','5','6','7','8','9','(',')','/','_','=','\\','[',']','*','"','<','>',';']'''
     
@@ -85,3 +87,10 @@ class Game:
         rotated_img = pygame.transform.rotate(img,rot)
         self.screen.blit(rotated_img,(pos[0]-rotated_img.get_width()//2,pos[1]-rotated_img.get_width()//2 - i*spread))
     render(img,pos,rot,spread)
+
+class Sprite(pygame.sprite.Sprite):
+  def __init__(self,path):
+    super().__init__()
+    Img = pygame.image.load(path).convert()
+    Img_rect = Img.get_rect()
+    

@@ -18,10 +18,10 @@ while True:
   App = Game(screen,clock,font)
   #-------------------------------
   screen.fill('White')
-  rot_frame += 1
   #-------------------------------
   # Framerate independency 
   dt,previous_time = App.deltatime(previous_time)
+  rot_frame += 50*dt
   # Custom Font
   App.Font('Font Ex/small_font.png',"This is Kesh's Base game module",(100,100),screen)
   # Sprite Stacking
@@ -31,4 +31,5 @@ while True:
   # Exit Handler
   App.exit()
   # Screen Updater
-  App.flip(60)
+  App.flip()
+  
