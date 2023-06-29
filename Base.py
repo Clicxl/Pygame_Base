@@ -3,8 +3,8 @@ from pygame.locals import *
 pygame.init()
 
 class Game:
-  def __init__(self,screen,clock,game_font=None):
-    self.screen = screen
+  def __init__(self,clock,game_font=None):
+    self.screen = pygame.display.get_surface()
     self.clock = clock
     self.font = game_font
     
@@ -36,7 +36,7 @@ class Game:
     display_surf.blit(debug_surf,debug_rect)
 
   # Credits to Thefluffypotato
-  def Font(self,path,information,location,surface):
+  def Font(self,path,information,location,surface,scale=[1,1]):
     # ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z','a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','.','-',',',':','+','\'','!','?','0','1','2','3','4','5','6','7','8','9','(',')','/','_','=','\\','[',']','*','"','<','>',';']'''
     
     def clip(surf,x,y,x_size,y_size):
@@ -45,16 +45,17 @@ class Game:
       handle_surf.set_clip(clipR)
       image = surf.subsurface(handle_surf.get_clip())
       return image.copy()
-    def render(surf,loc):
+    def render(surf,loc,scale):
       x_offset = 0
       for char in information:
         if char != " ":
-          surf.blit(self.characters[char],(loc[0]+x_offset,loc[1])) 
+          surf.blit(pygame.transform.scale_by(self.characters[char],scale),(loc[0]+x_offset,loc[1])) 
           x_offset += self.characters[char].get_width() + self.spacing
         else:
           x_offset += self.spacing_width + self.spacing
 
-    info = information
+    # info = information
+    scale = scale
     loc = location
     surf = surface
     self.spacing = 1
@@ -75,22 +76,26 @@ class Game:
       else:
         char_width += 1
     self.spacing_width = self.characters['A'].get_width()
-    render(surf,loc)
+    render(surf,loc,scale)
   
-  def spritestack(self,images,postion,rotation,spread=1):
+  def spritestack(self,images,postion,rotation,scale=[1,1],spread=1):
     img  = images
     pos = postion
     rot = rotation
-    spread = spread
-    def render(images,pos,rot,spread=1):
+    scale = scale
+    spread = scale[0] * spread 
+    def render(images,pos,rot,scale,spread=1):
       for i,img in enumerate(images):
-        rotated_img = pygame.transform.rotate(img,rot)
+        rotated_img = pygame.transform.rotate(pygame.transform.scale_by(img,scale),rot)
         self.screen.blit(rotated_img,(pos[0]-rotated_img.get_width()//2,pos[1]-rotated_img.get_width()//2 - i*spread))
-    render(img,pos,rot,spread)
 
-class Sprite(pygame.sprite.Sprite):
-  def __init__(self,path):
-    super().__init__()
-    Img = pygame.image.load(path).convert()
-    Img_rect = Img.get_rect()
-    
+    render(img,pos,rot,scale,spread)
+
+    # self.rect.center = pygame.mouse.get_pos()    
+
+  def outline(self,Surf,pos,color):
+    surf_mask = pygame.mask.from_surface(Surf)
+    for point in surf_mask.outline():
+      x = point[0] + pos[0]
+      y = point[1]+ pos[1]
+      pygame.draw.circle(self.screen,color,(x,y),1)

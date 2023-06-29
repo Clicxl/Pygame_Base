@@ -15,7 +15,7 @@ rot_frame = 0
 
 while True:
   # Module
-  App = Game(screen,clock,font)
+  App = Game(clock,font)
   #-------------------------------
   screen.fill('White')
   #-------------------------------
@@ -23,9 +23,9 @@ while True:
   dt,previous_time = App.deltatime(previous_time)
   rot_frame += 50*dt
   # Custom Font
-  App.Font('Font Ex/small_font.png',"This is Kesh's Base game module",(100,100),screen)
+  App.Font('Font Ex/small_font.png',"This is Kesh's Base game module",(100,100),screen,scale=2)
   # Sprite Stacking
-  App.spritestack(Ex_imgs,(150,75),rot_frame)
+  App.spritestack(Ex_imgs,(150,75),rot_frame,scale=[2,2])
   # Debuging
   App.debug(dt)
   # Exit Handler
